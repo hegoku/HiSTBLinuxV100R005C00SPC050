@@ -83,7 +83,6 @@ static HI_S32 task_alloc_channel_mem(OMXVDEC_CHAN_CTX *pchan)
     VDEC_CHAN_FRAME_STORE_PARAM_S stFsParam;
     HI_U32 u32NeededMemSize  = 0;
     HI_U32 u32NeededFrameNum = 0;
-    HI_U32 i = 0;
 
     if (pchan->decoder_vdh_buf.u32Size != 0 && pchan->decoder_vdh_buf.u32StartPhyAddr != 0)
     {
@@ -111,6 +110,7 @@ static HI_S32 task_alloc_channel_mem(OMXVDEC_CHAN_CTX *pchan)
 #endif
     {
     #if (1 == PRE_ALLOC_VDEC_VDH_MMZ)
+        HI_S32 i = 0;
         for (i = u32NeededFrameNum; i > 0; i--)
         {
             pchan->decoder_vdh_buf.u32Size = i * pchan->ref_frame_size;
