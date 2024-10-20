@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # SDK version: KERNELVERSION
-# Wed Jul 26 21:12:17 2017
+# Sat Oct 19 23:44:22 2024
 #
 
 #
@@ -237,7 +237,7 @@ CFG_HI_TOOL_MTDUTILS_SUPPORT=y
 CFG_HI_TOOL_REG_SUPPORT=y
 # CFG_HI_TOOL_PPPD_SUPPORT is not set
 # CFG_HI_TOOL_MIITOOLS_SUPPORT is not set
-# CFG_HI_TOOL_IPERF_SUPPORT is not set
+CFG_HI_TOOL_IPERF_SUPPORT=y
 # CFG_HI_TOOL_SYSSTAT_SUPPORT is not set
 # CFG_HI_TOOL_SOC_SERVER is not set
 CFG_HI_TOOL_MSP_DEBUG_SUPPORT=y
