@@ -127,7 +127,7 @@ export EXTRA_DEFINES += -DCFG_TEMP_CTRL_UP_THRESHOLD=$(CFG_HI_TEMP_CTRL_UP_THRES
 endif
 
 #device tree
-ifeq ($(CFG_HI_KERNEL_VERSION), linux-4.4.y)
+ifeq ($(CFG_HI_KERNEL_VERSION), linux-4.9.329)
 export CONFIG_MALI_DT=y
 export EXTRA_DEFINES += -DCONFIG_MALI_DT=1
 endif
