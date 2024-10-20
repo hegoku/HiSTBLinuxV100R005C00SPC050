@@ -200,13 +200,14 @@ ifeq ($(CFG_HI_ADAC_TVL320AIC31_SUPPORT),y)
 	$(AT)echo "insmod hi_tlv320.ko" >> $(HI_MODULE_DIR)/load
 endif
 
-ifneq ($(findstring $(CFG_HI_KERNEL_VERSION), linux-3.18.y linux-4.4.y),)
+ifeq ($(CONFIG_USB_EHCI_HCD_PLATFORM),m)
 	$(AT)echo "insmod ./usb/ehci-platform.ko" >> $(HI_MODULE_DIR)/load
+endif
+ifeq ($(CONFIG_USB_OHCI_HCD_PLATFORM),m)
 	$(AT)echo "insmod ./usb/ohci-platform.ko" >> $(HI_MODULE_DIR)/load
-
-    ifeq ($(USB3_SUPPORT),y)
-		$(AT)echo "insmod ./usb/xhci-plat-hcd.ko" >> $(HI_MODULE_DIR)/load
-    endif
+endif
+ifeq ($(CONFIG_USB_XHCI_PLATFORM),m)
+	$(AT)echo "insmod ./usb/xhci-plat-hcd.ko" >> $(HI_MODULE_DIR)/load
 endif
 
 ifeq ($(SATA_SUPPORT),y)
@@ -294,11 +295,13 @@ endif
 	$(AT)echo "rmmod libahci" >> $(HI_MODULE_DIR)/unload
 endif
 
-ifneq ($(findstring $(CFG_HI_KERNEL_VERSION), linux-3.18.y linux-4.4.y),)
-    ifeq ($(USB3_SUPPORT),y)
-		$(AT)echo "rmmod xhci-plat-hcd" >> $(HI_MODULE_DIR)/unload
-    endif
+ifeq ($(CONFIG_USB_EHCI_HCD_PLATFORM),m)
+	$(AT)echo "rmmod xhci-plat-hcd" >> $(HI_MODULE_DIR)/unload
+endif
+ifeq ($(CONFIG_USB_OHCI_HCD_PLATFORM),m)
 	$(AT)echo "rmmod ohci-platform" >> $(HI_MODULE_DIR)/unload
+endif
+ifeq ($(CONFIG_USB_XHCI_PLATFORM),m)
 	$(AT)echo "rmmod ehci-platform" >> $(HI_MODULE_DIR)/unload
 endif
 
