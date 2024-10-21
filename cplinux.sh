@@ -50,4 +50,44 @@ if [ `grep -c "\+= hisilicon\/" ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/li
     sed -i '1i/obj-y \+= hisilicon\/\nifeq ($(CONFIG_MSP),y)\nobj-y \+= common\/\nobj-y \+= msp\/\nendif\nifeq ($(HI_CONFIG_WIFI),y)\nobj-y \+= wifi\/\nendif\nifeq ($(HI_CONFIG_BLUETOOTH),y)\nobj-y \+= bluetooth_usb\/\nendif' ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/drivers/Makefile
 fi
 
+cp -Rf ./HiSTBLinuxV100R005C00SPC050/source/kernel/linux-4.4.y/drivers/mtd/hisilicon ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/drivers/mtd/
+if [ `grep -c "source \"drivers\/mtd\/hisilicon\/Kconfig\"" ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/source/kernel/linux-4.9.329/drivers/mtd/Kconfig` -eq '0' ]; then
+    sed -i '/endif # MTD/i\source "drivers\/mtd\/hisilicon\/Kconfig"\n' ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/source/kernel/linux-4.9.329/drivers/mtd/Kconfig
+fi
+if [ `grep -c "\+= hisilicon\/" ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/drivers/mtd/Makefile` -eq '0' ]; then
+    sed -i '1i/obj-$(CONFIG_MTD_HIFMC100) \+= hisilicon\/\n' ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/drivers/mtd/Makefile
+fi
+
+cp -Rf ./HiSTBLinuxV100R005C00SPC050/source/kernel/linux-4.4.y/include/linux/hisilicon ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/include/linux/
+
+cp -Rf ./HiSTBLinuxV100R005C00SPC050/source/kernel/linux-4.4.y/drivers/usb/udc/hiudc ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/drivers/usb/udc/
+if [ `grep -c "config USB_HISI_UDC" ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/source/kernel/linux-4.9.329/drivers/usb/udc/Kconfig` -eq '0' ]; then
+    sed -i '/endmenu/i\config USB_HISI_UDC\n	tristate "Hisilicon USB2.0 Device Controller"\n	depends on HAS_DMA\n	help\n	  Hisilicon Socs include a high speed\n	  USB2.0 Device controller, which can be configured as high speed or\n	  full speed USB peripheral.\n' ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/source/kernel/linux-4.9.329/drivers/usb/udc/Kconfig
+fi
+if [ `grep -c "CONFIG_USB_HISI_UDC" ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/source/kernel/linux-4.9.329/drivers/usb/udc/Makefile` -eq '0' ]; then
+    sed -i '1i\ifndef CONFIG_USB_HISI_UDC\nobj-$(CONFIG_USB_GADGET)	\+= udc-core.o\nendif\nobj-$(CONFIG_USB_HISI_UDC)	\+= hiudc\/\n' ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/source/kernel/linux-4.9.329/drivers/usb/udc/Makefile
+fi
+
+cp -Rf ./HiSTBLinuxV100R005C00SPC050/source/kernel/linux-4.4.y/dirvers/net/ethernet/hieth ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/dirvers/net/ethernet/
+if [ `grep -c "source \"drivers\/net\/ethernet\/hieth\/Kconfig\"" ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/source/kernel/linux-4.9.329/drivers/net/ethernet/Kconfig` -eq '0' ]; then
+    sed -i '/endif # ETHERNET/i\source "drivers\/net\/ethernet\/hieth\/Kconfig"\n' ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/source/kernel/linux-4.9.329/drivers/net/ethernet/Kconfig
+fi
+if [ `grep -c "\+= hieth\/" ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/drivers/net/ethernet/Makefile` -eq '0' ]; then
+    sed -i '1i/obj-$(CONFIG_HIETH_SWITCH_FABRIC) \+= hieth\/\n' ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/drivers/net/ethernet/Makefile
+fi
+
+cp -Rf ./HiSTBLinuxV100R005C00SPC050/source/kernel/linux-4.4.y/dirvers/net/phy/hisilicon.c ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/dirvers/net/phy/
+if [ `grep -c "config HISILICON_PHY" ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/source/kernel/linux-4.9.329/drivers/net/phy/Kconfig` -eq '0' ]; then
+    sed -i '/endif # PHYLIB/i\config HISILICON_PHY\n	tristate "Drivers for HiSilicon PHYs"\n	---help---\n	  Supports the Festa series PHYs.\n' ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/source/kernel/linux-4.9.329/drivers/net/phy/Kconfig
+fi
+if [ `grep -c "\+= hisilicon\.o" ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/drivers/net/phy/Makefile` -eq '0' ]; then
+    sed -i '1i/obj-$(CONFIG_HISILICON_PHY)	\+= hisilicon\.o\n' ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/drivers/net/phy/Makefile
+fi
+
+cp -Rf ./HiSTBLinuxV100R005C00SPC050/source/kernel/linux-4.4.y/dirvers/mmc/host/himciv200 ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/dirvers/mmc/host
+cp -Rf ./HiSTBLinuxV100R005C00SPC050/source/kernel/linux-4.4.y/dirvers/mmc/host/himciv300 ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/dirvers/mmc/host
+if [ `grep -c "\+= himciv200\/" ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/drivers/mmc/host/Makefile` -eq '0' ]; then
+    sed -i '1i/obj-$(CONFIG_HIMCIV200_SDIO_SYNOPSYS)  \+= himciv200\/\nobj-$(CONFIG_HIMCIV300_SDIO_SYNOPSYS)  \+= himciv300\/\n' ./HiSTBLinuxV100R005C00SPC050_n/source/kernel/linux-4.9.329/drivers/mmc/host/Makefile
+fi
+
 cp ./HiSTBLinuxV100R005C00SPC050_n/configs/hi3798mv100/hi3798mdmo1g_hi3798mv100_cfg.mak ./HiSTBLinuxV100R005C00SPC050_n/cfg.mak
