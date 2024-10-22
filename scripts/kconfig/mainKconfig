@@ -49,6 +49,9 @@ source "scripts/kconfig/Kconfig.opera"
 source "scripts/kconfig/Kconfig.qt"
 endmenu
 
+config  HI_BUILD_MPS
+	bool "Whether to build MSP"
+
 menu "Msp"
 source "scripts/kconfig/Kconfig.frontend"
 source "scripts/kconfig/Kconfig.demux"
