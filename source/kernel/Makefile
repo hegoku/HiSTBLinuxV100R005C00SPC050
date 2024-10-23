@@ -134,7 +134,7 @@ ifeq ($(CFG_HI_SPI_SUPPORT),y)
 endif
 endif
 	$(AT)mkdir -p $(HI_MODULE_DIR)/usb
-	$(AT)-cp -f $(KERNEL_OUT_DIR)/drivers/usb/host/*.ko $(HI_MODULE_DIR)/usb/
+	$(AT) if ls $(KERNEL_OUT_DIR)/drivers/usb/host/*.ko > /dev/null 2>&1; then cp -f $(KERNEL_OUT_DIR)/drivers/usb/host/*.ko $(HI_MODULE_DIR)/usb/; fi
 	$(AT)(for file in $(wildcard $(KERNEL_OUT_DIR)/drivers/ata/*.ko) ; do ( \
 			mkdir -p $(HI_MODULE_DIR)/sata && cp $$file $(HI_MODULE_DIR)/sata/ \
 		) done )
