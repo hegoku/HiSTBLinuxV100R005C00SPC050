@@ -38,7 +38,7 @@ if [ `grep -c "drivers\/cpufreq\/Kconfig\\.hisilicon" ${DIST_DIR}/source/kernel/
 fi
 
 cp -Rf ${SOURCE_DIR}/source/kernel/${OLD_KERNEL}/drivers/hisilicon ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/
-if [ `grep -c "source "drivers\/hisilicon\/Kconfig"" ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/Kconfig` -eq '0' ]; then
+if [ `grep -c "source \"drivers\/hisilicon\/Kconfig\"" ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/Kconfig` -eq '0' ]; then
     sed -i '/menu "Device Drivers"/a\source "drivers\/hisilicon\/Kconfig"\n' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/Kconfig
 fi
 
@@ -79,6 +79,7 @@ if [ `grep -c "CONFIG_USB_HISI_UDC" ${DIST_DIR}/source/kernel/${NEW_KERNEL}/driv
     sed -i '1i\ifndef CONFIG_USB_HISI_UDC\nobj-$(CONFIG_USB_GADGET)	\+= udc-core.o\nendif\nobj-$(CONFIG_USB_HISI_UDC)	\+= hiudc\/\n' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/usb/gadget/udc/Makefile
 fi
 
+cp -Rf ${SOURCE_DIR}/source/kernel/${OLD_KERNEL}/include/linux/hisilicon_phy.h ${DIST_DIR}/source/kernel/${NEW_KERNEL}/include/linux/hisilicon_phy.h
 cp -Rf ${SOURCE_DIR}/source/kernel/${OLD_KERNEL}/drivers/net/ethernet/hieth ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/ethernet/
 if [ `grep -c "source \"drivers\/net\/ethernet\/hieth\/Kconfig\"" ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/ethernet/Kconfig` -eq '0' ]; then
     sed -i '/endif # ETHERNET/i\source "drivers\/net\/ethernet\/hieth\/Kconfig"\n' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/ethernet/Kconfig
@@ -101,6 +102,11 @@ fi
 if [ `grep -c "\+= hisilicon\.o" ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/phy/Makefile` -eq '0' ]; then
     sed -i '1i\obj-$(CONFIG_HISILICON_PHY)	\+= hisilicon\.o\n' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/phy/Makefile
 fi
+sed -i 's/phydev->bus/phydev->mdio.bus/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/phy/hisilicon.c
+sed -i '/\.driver = { *\.owner = THIS_MODULE/d' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/phy/hisilicon.c
+sed -i 's/\&phydev->dev/\&phydev->mdio.dev/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/phy/hisilicon.c
+sed -i 's/phydev->dev\.of_node/phydev->mdio.dev.of_node/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/phy/hisilicon.c
+sed -i 's/phydev->addr/phydev->mdio.addr/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/phy/hisilicon.c
 
 cp -Rf ${SOURCE_DIR}/source/kernel/${OLD_KERNEL}/drivers/mmc/host/himciv200 ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/mmc/host
 cp -Rf ${SOURCE_DIR}/source/kernel/${OLD_KERNEL}/drivers/mmc/host/himciv300 ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/mmc/host
@@ -122,10 +128,24 @@ fi
 
 sed -i 's/-Werror=date-time/-Wno-error=date-time/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/Makefile
 
-if [ `grep -c "#include \"clk-hisi\.h\"" ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/clk/hi3798mx/clk-hi3798mv100.c` -ne '0' ]; then
-    sed -i 's/#include "clk-hisi\.h"/#include "\.\.\/clk-hisi\.h"/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/clk/hi3798mx/clk-hi3798mv100.c
-fi
+# if [ `grep -c "#include \"clk-hisi\.h\"" ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/clk/hi3798mx/clk-hi3798mv100.c` -ne '0' ]; then
+    # sed -i 's/#include "clk-hisi\.h"/#include "\.\.\/clk-hisi\.h"/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/clk/hi3798mx/clk-hi3798mv100.c
+# fi
+sed -i 's/-I\.\/drivers\/hisilicon\/clk/-I$(srctree)\/drivers\/hisilicon\/clk/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/clk/hi3798mx/Makefile
 sed -i 's/init.flags = CLK_IS_ROOT | CLK_IS_BASIC | CLK_GET_RATE_NOCACHE;/init.flags = CLK_IS_BASIC | CLK_GET_RATE_NOCACHE;/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/clk/clk-hisi.c
+
+sed -i '/case CPU_STARTING:/,+2d' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hisp804-timer.c
+sed -i '/case CPU_DYING:/,+2d' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hisp804-timer.c
+sed -i 's/return NOTIFY_OK/return NOTIFY_DONE/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hisp804-timer.c
+
+sed -i 's/orr	r2, r1, LSL #5/orr	r2, r2, r1, LSL #5/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/soc/hi3798mv100/hipm_sleep.S
+
+##Deactivate part-change, and hope one day I will migrate this function.
+sed -i '/config PART_CHANGE/,+6d' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/Kconfig
+sed -i 's/obj-$(CONFIG_PART_CHANGE)/#obj-$(CONFIG_PART_CHANGE)/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/Makefile
+##end part-change
+
+sed -i 's/extern struct list_head gpio_chips;/struct list_head gpio_chips;/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/export_sym.c
 
 ##ion问题##
 # # if [ `grep -c "#include "\.\.\/\.\.\/\.\.\/drivers\/staging\/android\/uapi\/ion\.h"" ${DIST_DIR}/source/common/drv/mmz/drv_media_mem.h` -eq '0' ]; then
