@@ -321,6 +321,7 @@ CFG_HI_OPENSSL_SUPPORT=y
 #
 # Msp
 #
+CFG_HI_BUILD_MPS=y
 
 #
 # DEMUX Config

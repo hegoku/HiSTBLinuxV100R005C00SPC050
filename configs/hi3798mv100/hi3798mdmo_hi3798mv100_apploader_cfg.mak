@@ -310,6 +310,7 @@ CFG_HI_CURL_SUPPORT=y
 #
 # Msp
 #
+CFG_HI_BUILD_MPS=y
 
 #
 # DEMUX Config
