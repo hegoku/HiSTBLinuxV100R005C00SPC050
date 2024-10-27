@@ -1,3 +1,6 @@
+obj-$(CONFIG_HIMCIV200_SDIO_SYNOPSYS)  += himciv200/
+obj-$(CONFIG_HIMCIV300_SDIO_SYNOPSYS)  += himciv300/
+
 #
 # Makefile for MMC/SD host controller drivers
 #

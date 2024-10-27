@@ -71,6 +71,8 @@ config MTD_REDBOOT_PARTS_READONLY
 	  If you need to force read-only for 'RedBoot', 'RedBoot Config' and
 	  'FIS directory' images, enable this option.
 
+source "drivers/mtd/hisilicon/Kconfig"
+
 endif # MTD_REDBOOT_PARTS
 
 config MTD_CMDLINE_PARTS
@@ -337,5 +339,7 @@ source "drivers/mtd/lpddr/Kconfig"
 source "drivers/mtd/spi-nor/Kconfig"
 
 source "drivers/mtd/ubi/Kconfig"
+
+source "drivers/mtd/hisilicon/Kconfig"
 
 endif # MTD

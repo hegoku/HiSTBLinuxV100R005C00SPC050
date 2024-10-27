@@ -1,3 +1,5 @@
+obj-$(CONFIG_MTD_HIFMC100) += hisilicon/
+
 #
 # Makefile for the memory technology device drivers.
 #

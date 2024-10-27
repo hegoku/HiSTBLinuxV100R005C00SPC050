@@ -152,6 +152,12 @@ textofs-$(CONFIG_ARCH_MSM8960) := 0x00208000
 textofs-$(CONFIG_ARCH_AXXIA) := 0x00308000
 
 # Machine directory name.  This list is sorted alphanumerically
+machine-$(CONFIG_ARCH_HI3798MX) += hi3798mx
+machine-$(CONFIG_ARCH_HI3798CV2X) += hi3798cv2x
+machine-$(CONFIG_ARCH_HI3798MV2X) += hi3798mv2x
+machine-$(CONFIG_ARCH_HI3796MV2X) += hi3796mv2x
+machine-$(CONFIG_ARCH_HI3716MV420N) += hi3716mv420n
+
 # by CONFIG_* macro name.
 machine-$(CONFIG_ARCH_ALPINE)		+= alpine
 machine-$(CONFIG_ARCH_ARTPEC)		+= artpec

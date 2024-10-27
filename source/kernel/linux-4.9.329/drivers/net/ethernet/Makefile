@@ -1,3 +1,5 @@
+obj-$(CONFIG_HIETH_SWITCH_FABRIC) += hieth/
+
 #
 # Makefile for the Linux network Ethernet device drivers.
 #

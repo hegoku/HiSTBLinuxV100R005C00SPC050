@@ -1,3 +1,5 @@
+obj-$(CONFIG_HISILICON_PHY)	+= hisilicon.o
+
 # Makefile for Linux PHY drivers and MDIO bus drivers
 
 libphy-y			:= phy.o phy_device.o mdio_bus.o mdio_device.o
