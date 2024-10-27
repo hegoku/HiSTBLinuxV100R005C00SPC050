@@ -76,6 +76,7 @@ static void __init hi3798mx_reserve(void)
 }
 /******************************************************************************/
 
+extern int hisi_declare_heap_memory(void);
 static void __init hi3798mx_init_early(void)
 {
 	/*
@@ -89,6 +90,7 @@ static void __init hi3798mx_init_early(void)
 	  :
 	  :
 	  : "r0", "cc");
+	hisi_declare_heap_memory();
 }
 /*****************************************************************************/
 
