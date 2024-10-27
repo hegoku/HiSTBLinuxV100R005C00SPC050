@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # SDK version: KERNELVERSION
-# Sat Oct 19 23:44:22 2024
+# Sun Oct 27 14:03:41 2024
 #
 
 #
@@ -215,8 +215,8 @@ CFG_HI_BUILD_WITH_KEYLED=y
 # Kernel
 #
 # CFG_LINUX-3.18.y is not set
-CFG_LINUX-4.4.y=y
-CFG_HI_KERNEL_VERSION=linux-4.4.y
+CFG_LINUX-4.9.329=y
+CFG_HI_KERNEL_VERSION=linux-4.9.329
 CFG_HI_KERNEL_CFG=hi3798mv100_defconfig
 # CFG_HI_FS_BUILDIN is not set
 # CFG_HI_MSP_BUILDIN is not set
@@ -312,11 +312,11 @@ CFG_HI_OPENSSL_SUPPORT=y
 # CFG_HI_DRM_SUPPORT is not set
 # CFG_HI_OPERA_SUPPORT is not set
 # CFG_HI_QT_SUPPORT is not set
+# CFG_HI_BUILD_MPS is not set
 
 #
 # Msp
 #
-CFG_HI_BUILD_MPS=y
 
 #
 # DEMUX Config

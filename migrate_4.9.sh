@@ -135,9 +135,8 @@ sed -i 's/-Werror=date-time/-Wno-error=date-time/g' ${DIST_DIR}/source/kernel/${
 sed -i 's/-I\.\/drivers\/hisilicon\/clk/-I$(srctree)\/drivers\/hisilicon\/clk/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/clk/hi3798mx/Makefile
 sed -i 's/init.flags = CLK_IS_ROOT | CLK_IS_BASIC | CLK_GET_RATE_NOCACHE;/init.flags = CLK_IS_BASIC | CLK_GET_RATE_NOCACHE;/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/clk/clk-hisi.c
 
-sed -i '/case CPU_STARTING:/,+2d' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hisp804-timer.c
-sed -i '/case CPU_DYING:/,+2d' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hisp804-timer.c
-sed -i 's/return NOTIFY_OK/return NOTIFY_DONE/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hisp804-timer.c
+sed -i 's/CPU_STARTING/CPU_ONLINE/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hisp804-timer.c
+sed -i 's/CPU_DYING/CPU_DEAD/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hisp804-timer.c\
 
 sed -i 's/orr	r2, r1, LSL #5/orr	r2, r2, r1, LSL #5/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/soc/hi3798mv100/hipm_sleep.S
 
