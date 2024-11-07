@@ -32,6 +32,7 @@
 #include <linux/of_address.h>
 #include <linux/of_irq.h>
 #include <linux/sched_clock.h>
+#include <linux/cpuhotplug.h>
 
 #define TIMER_LOAD      0x00             /* ACVR rw */
 #define TIMER_VALUE     0x04             /* ACVR ro */
@@ -222,29 +223,18 @@ static void hisp804_clockevent_stop(struct hisp804_clockevent_device *hiclkevt)
 }
 /******************************************************************************/
 
-static int hisp804_clockevent_cpu_notify(struct notifier_block *self,
-					 unsigned long action, void *hcpu)
+static int hisp804_cpu_online(unsigned int cpu)
 {
-	/*
-	 * Grab cpu pointer in each case to avoid spurious
-	 * preemptible warnings
-	 */
-	switch (action & ~CPU_TASKS_FROZEN) {
-	case CPU_ONLINE:
-		hisp804_clockevent_setup(this_cpu_ptr(hisp804_clkevt));
-		break;
-	case CPU_DEAD:
-		hisp804_clockevent_stop(this_cpu_ptr(hisp804_clkevt));
-		break;
-	}
-
-	return NOTIFY_OK;
+	hisp804_clockevent_setup(per_cpu_ptr(hisp804_clkevt, cpu));
+	return 0;
 }
-/*****************************************************************************/
 
-static struct notifier_block hisp804_clockevent_cpu_nb = {
-	.notifier_call = hisp804_clockevent_cpu_notify,
-};
+static int hisp804_cpu_down(unsigned int cpu)
+{
+	hisp804_clockevent_stop(per_cpu_ptr(hisp804_clkevt, cpu));
+	return 0;
+}
+
 /*****************************************************************************/
 
 static void __init clockevent_init(struct hisp804_clockevent_device *hiclkevt,
@@ -331,11 +321,12 @@ static void __init hisp804_timer_init(struct device_node *node)
 
 	hisp804_clocksource_init(base, rate);
 
-	ret = register_cpu_notifier(&hisp804_clockevent_cpu_nb);
+	ret = cpuhp_setup_state(CPUHP_AP_ACTIVE, "hisp804timer:online",
+				hisp804_cpu_online, hisp804_cpu_down);
 	if (ret)
 		goto out_notifier;
 
-	hisp804_clockevent_setup(this_cpu_ptr(hisp804_clkevt));
+	// hisp804_clockevent_setup(this_cpu_ptr(hisp804_clkevt));
 
 	return;
 
