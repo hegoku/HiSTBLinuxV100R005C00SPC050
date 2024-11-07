@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 if [ -z "$1" -o  -z "$2" ]; then
-    echo "cplinux source_dir dist_dir"
+    echo "migrate_4.4.y.sh source_dir dist_dir"
     exit 1
 fi
 
@@ -11,6 +11,9 @@ OLD_KERNEL='linux-4.4.y'
 NEW_KERNEL='linux-4.9.329'
 
 cp -f ${SOURCE_DIR}/source/kernel/${OLD_KERNEL}/arch/arm/boot/dts/hi37* ${DIST_DIR}/source/kernel/${NEW_KERNEL}/arch/arm/boot/dts/
+if [ `grep -c "CONFIG_ARCH_HI3798MX" ${DIST_DIR}/source/kernel/${NEW_KERNEL}/arch/arm/boot/dts/Makefile` -eq '0' ]; then
+    sed -i '/ifeq ($(CONFIG_OF),y)/a\dtb-$(CONFIG_ARCH_HI3798MX) \+= hi3798mv100\.dtb\n' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/arch/arm/boot/dts/Makefile
+fi
 
 cp -f ${SOURCE_DIR}/source/kernel/${OLD_KERNEL}/arch/arm/boot/dts/include/dt-bindings/clock/hi37* ${DIST_DIR}/source/kernel/${NEW_KERNEL}/arch/arm/boot/dts/include/dt-bindings/clock/
 

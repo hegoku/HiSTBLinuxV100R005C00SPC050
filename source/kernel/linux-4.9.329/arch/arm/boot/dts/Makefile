@@ -1,4 +1,6 @@
 ifeq ($(CONFIG_OF),y)
+dtb-$(CONFIG_ARCH_HI3798MX) += hi3798mv100.dtb
+
 
 dtb-$(CONFIG_ARCH_ALPINE) += \
 	alpine-db.dtb
