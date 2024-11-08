@@ -1045,9 +1045,7 @@ static int hieth_platdev_probe_port(struct platform_device *pdev,
 
 	priv->dev = dev;
 
-	init_timer(&priv->monitor);
-	priv->monitor.function = hieth_monitor_func;
-	priv->monitor.data = (unsigned long)netdev;
+	setup_timer(&priv->monitor, hieth_monitor_func, (unsigned long)netdev);
 	priv->monitor.expires =
 	    jiffies + msecs_to_jiffies(HIETH_MONITOR_TIMER);
 
