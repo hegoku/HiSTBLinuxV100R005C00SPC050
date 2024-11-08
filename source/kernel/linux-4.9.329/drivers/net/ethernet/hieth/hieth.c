@@ -10,6 +10,7 @@
 #include <linux/circ_buf.h>
 #include <linux/hikapi.h>
 #include <linux/netdevice.h>
+#include <uapi/linux/if_ether.h>
 
 #include "hieth.h"
 #include "mdio.h"
@@ -22,6 +23,7 @@ struct hieth_phy_param_s hieth_phy_param[HIETH_MAX_PORT];
 /*----------------------------Local variable-------------------------------*/
 static struct net_device *hieth_devs_save[HIETH_MAX_PORT] = { NULL, NULL };
 static struct hieth_netdev_priv hieth_priv;
+static char bootarg_macaddr[ETH_ALEN] = {0,0,0,0,0,0};
 
 /* real port count */
 static int hieth_real_port_cnt;
@@ -40,6 +42,25 @@ static int __init hieth_noeth(char *str)
 early_param("noeth", hieth_noeth);
 
 #include "pm.c"
+
+static int __init param_mac_setup(char *str)
+{
+	char *ad, *tmp;
+	char tmpline[256];
+	int i;
+	
+	if (str==NULL) return 0;
+	strncpy(tmpline, str, sizeof(tmpline));
+	tmpline[sizeof(tmpline)-1] = '\0';
+	tmp = tmpline;
+
+	for (i=0;(ad=strsep(&tmp, ":"))!=NULL;) {
+		bootarg_macaddr[i] = simple_strtoull(ad, NULL, 16);
+		if (++i>5) break;
+	}
+	return 0;
+}
+__setup("himac=", param_mac_setup);
 
 static int hieth_hw_set_macaddress(struct hieth_netdev_priv *priv,
 				   unsigned char *mac)
@@ -830,19 +851,19 @@ static u32 hieth_ethtools_get_link(struct net_device *net_dev)
 	return ((priv->phy->link) ? HIETH_P_MAC_PORTSET_LINKED : 0);
 }
 
-static int hieth_ethtools_get_settings(struct net_device *net_dev,
-				       struct ethtool_cmd *cmd)
+static int hieth_ethtools_get_link_ksettings(struct net_device *net_dev,
+				       struct ethtool_link_ksettings *cmd)
 {
 	struct hieth_netdev_priv *priv = netdev_priv(net_dev);
 
 	if (priv->phy)
-		return phy_ethtool_gset(priv->phy, cmd);
+		phy_ethtool_ksettings_get(priv->phy, cmd);
 
-	return -EINVAL;
+	return 0;
 }
 
-static int hieth_ethtools_set_settings(struct net_device *net_dev,
-				       struct ethtool_cmd *cmd)
+static int hieth_ethtools_set_link_ksettings(struct net_device *net_dev,
+				       struct ethtool_link_ksettings *cmd)
 {
 	struct hieth_netdev_priv *priv = netdev_priv(net_dev);
 
@@ -850,7 +871,7 @@ static int hieth_ethtools_set_settings(struct net_device *net_dev,
 		return -EPERM;
 
 	if (priv->phy)
-		return phy_ethtool_sset(priv->phy, cmd);
+		return phy_ethtool_ksettings_set(priv->phy, cmd);
 
 	return -EINVAL;
 }
@@ -912,8 +933,8 @@ static int hieth_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
 static struct ethtool_ops hieth_ethtools_ops = {
 	.get_drvinfo = hieth_ethtools_get_drvinfo,
 	.get_link = hieth_ethtools_get_link,
-	.get_settings = hieth_ethtools_get_settings,
-	.set_settings = hieth_ethtools_set_settings,
+	.get_settings = hieth_ethtools_get_link_ksettings,
+	.set_settings = hieth_ethtools_set_link_ksettings,
 	.get_wol = hieth_get_wol,
 	.set_wol = hieth_set_wol,
 };
@@ -1210,6 +1231,10 @@ static int hieth_of_get_param(struct device_node *node)
 
 		/* get mac */
 		hieth_phy_param[idx].macaddr = of_get_mac_address(child);
+
+		if (is_valid_ether_addr(bootarg_macaddr)) {
+			hieth_phy_param[idx].macaddr = bootarg_macaddr;
+		}
 
 		/* get gpio_base and bit */
 		of_property_read_u32(child, "phy-gpio-base",
