@@ -863,7 +863,7 @@ static int hieth_ethtools_get_link_ksettings(struct net_device *net_dev,
 }
 
 static int hieth_ethtools_set_link_ksettings(struct net_device *net_dev,
-				       struct ethtool_link_ksettings *cmd)
+				       const struct ethtool_link_ksettings *cmd)
 {
 	struct hieth_netdev_priv *priv = netdev_priv(net_dev);
 
@@ -933,8 +933,8 @@ static int hieth_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
 static struct ethtool_ops hieth_ethtools_ops = {
 	.get_drvinfo = hieth_ethtools_get_drvinfo,
 	.get_link = hieth_ethtools_get_link,
-	.get_settings = hieth_ethtools_get_link_ksettings,
-	.set_settings = hieth_ethtools_set_link_ksettings,
+	.get_link_ksettings = hieth_ethtools_get_link_ksettings,
+	.set_link_ksettings = hieth_ethtools_set_link_ksettings,
 	.get_wol = hieth_get_wol,
 	.set_wol = hieth_set_wol,
 };
