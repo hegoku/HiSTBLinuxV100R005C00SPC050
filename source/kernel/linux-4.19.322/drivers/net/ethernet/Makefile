@@ -1,3 +1,5 @@
+obj-$(CONFIG_HIETH_SWITCH_FABRIC) += hieth/
+
 # SPDX-License-Identifier: GPL-2.0
 #
 # Makefile for the Linux network Ethernet device drivers.

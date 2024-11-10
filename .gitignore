@@ -8,10 +8,10 @@ cfg.mak.old
 out/
 
 # auto create links
-source/kernel/linux-4.9.329/drivers/bluetooth_usb
-source/kernel/linux-4.9.329/drivers/common
-source/kernel/linux-4.9.329/drivers/msp
-source/kernel/linux-4.9.329/drivers/wifi
+source/kernel/linux-4.19.322/drivers/bluetooth_usb
+source/kernel/linux-4.19.322/drivers/common
+source/kernel/linux-4.19.322/drivers/msp
+source/kernel/linux-4.19.322/drivers/wifi
 
 # auto create files
-source/kernel/linux-4.9.329/.config
+source/kernel/linux-4.19.322/.config

@@ -1,3 +1,8 @@
+ifndef CONFIG_USB_HISI_UDC
+obj-$(CONFIG_USB_GADGET)	+= udc-core.o
+endif
+obj-$(CONFIG_USB_HISI_UDC)	+= hiudc/
+
 # SPDX-License-Identifier: GPL-2.0
 # define_trace.h needs to know how to find our header
 CFLAGS_trace.o			:= -I$(src)

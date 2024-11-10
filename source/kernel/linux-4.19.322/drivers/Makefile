@@ -1,3 +1,14 @@
+obj-y += hisilicon/
+ifeq ($(CONFIG_MSP),y)
+obj-y += common/
+obj-y += msp/
+endif
+ifeq ($(HI_CONFIG_WIFI),y)
+obj-y += wifi/
+endif
+ifeq ($(HI_CONFIG_BLUETOOTH),y)
+obj-y += bluetooth_usb/
+endif
 # SPDX-License-Identifier: GPL-2.0
 #
 # Makefile for the Linux kernel device drivers.

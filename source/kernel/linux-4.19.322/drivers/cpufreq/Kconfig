@@ -203,6 +203,10 @@ config CPU_FREQ_GOV_SCHEDUTIL
 	  If in doubt, say N.
 
 comment "CPU frequency scaling drivers"
+menu "Hisilicon CPU frequency scaling config"
+source "drivers/cpufreq/Kconfig.hisilicon"
+endmenu
+
 
 config CPUFREQ_DT
 	tristate "Generic DT based cpufreq driver"

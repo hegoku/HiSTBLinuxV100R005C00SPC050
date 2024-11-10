@@ -189,7 +189,10 @@ $(KERNEL_OUT_DIR)/arch/$(CFG_HI_CPU_ARCH)/boot/uImage: prepare
 		HI_CONFIG_BLUETOOTH=$(HI_CONFIG_BLUETOOTH_DEVICE) \
 		CONFIG_ADVCA=$(CFG_ADVCA) \
 		$(EXTRA_FLAGS_KERNEL) \
-		CFLAGS_KERNEL=$(CFLAGS_KERNEL) AFLAGS_KERNEL=$(AFLAGS_KERNEL) uImage modules
+		CFLAGS_KERNEL=$(CFLAGS_KERNEL) AFLAGS_KERNEL=$(AFLAGS_KERNEL) zImage modules dtbs
+	cat $(BUILD_DIR)/arch/arm/boot/zImage $(BUILD_DIR)/arch/arm/boot/dts/hi3798mv100.dtb > $(BUILD_DIR)/arch/arm/boot/zImage.dtb
+	mkimage -A arm -O linux -C none -T kernel -a 0x02000000 -e 0x02000000 -n 'Linux-$(shell cat ${BUILD_DIR}/include/config/kernel.release)' -d $(BUILD_DIR)/arch/arm/boot/zImage.dtb $(BUILD_DIR)/arch/arm/boot/uImage
+	
 
 menuconfig: prepare
 	make -C $(KERNEL_SRC_DIR) ARCH=$(CFG_HI_CPU_ARCH) \

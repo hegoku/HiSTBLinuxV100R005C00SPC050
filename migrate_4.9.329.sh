@@ -11,6 +11,9 @@ OLD_KERNEL='linux-4.9.329'
 NEW_KERNEL='linux-4.19.322'
 
 cp -f ${SOURCE_DIR}/source/kernel/${OLD_KERNEL}/arch/arm/boot/dts/hi37* ${DIST_DIR}/source/kernel/${NEW_KERNEL}/arch/arm/boot/dts/
+if [ `grep -c "CONFIG_ARCH_HI3798MX" ${DIST_DIR}/source/kernel/${NEW_KERNEL}/arch/arm/boot/dts/Makefile` -eq '0' ]; then
+    sed -i '1a\dtb-$(CONFIG_ARCH_HI3798MX) \+= hi3798mv100.dtb\n' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/arch/arm/boot/dts/Makefile
+fi
 
 cp -f ${SOURCE_DIR}/source/kernel/${OLD_KERNEL}/arch/arm/boot/dts/include/dt-bindings/clock/hi37* ${DIST_DIR}/source/kernel/${NEW_KERNEL}/include/dt-bindings/clock/
 
@@ -43,9 +46,26 @@ if [ `grep -c "source \"drivers\/hisilicon\/Kconfig\"" ${DIST_DIR}/source/kernel
     sed -i '/menu "Device Drivers"/a\source "drivers\/hisilicon\/Kconfig"\n' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/Kconfig
 fi
 
-sed -i 's/CFG_HI_KERNEL_VERSION=linux-4\.9\.329/CFG_HI_KERNEL_VERSION=linux-4\.19\.322/g' `grep 'CFG_HI_KERNEL_VERSION=linux-4.9.329' -rl ${DIST_DIR}/configs/`
+sed -i 's/#include <asm\/uaccess\.h>/#include <linux\/uaccess\.h>/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/flash_stats/flash_stats.c
+sed -i 's/#include <asm\/uaccess\.h>/#include <linux\/uaccess\.h>/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/flash_stats/stats_rwe.c
+sed -i 's/#include <asm\/uaccess\.h>/#include <linux\/uaccess\.h>/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/flash_stats/stats_ecc.c
+sed -i 's/#include <asm\/uaccess\.h>/#include <linux\/uaccess\.h>/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/flash_stats/stats_read_retry.c
 
-sed -i 's/CFG_LINUX-4\.9\.329=y/CFG_LINUX-4\.19\.322=y/g' `grep 'CFG_linux-4.9.329=y' -rl ${DIST_DIR}/configs/`
+sed -i 's/cycle_t/u64/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hisp804-timer.c
+
+sed -i 's/#include <asm\/uaccess\.h>/#include <linux\/uaccess\.h>/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hw_breakpoint.c
+sed -i 's/__set_task_state(sem->task, TASK_UNINTERRUPTIBLE);/sem->task->state=TASK_UNINTERRUPTIBLE;/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hw_breakpoint.c
+sed -i '/#include <linux\/kthread\.h>/a\#include <linux\/sched\/debug\.h>\n#include <uapi\/linux\/sched\/types\.h>\n' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hw_breakpoint.c
+
+sed -i '/#include <linux\/hrtimer\.h>/a\#include <uapi\/linux\/sched\/types\.h>\n' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/hisilicon/misc/hrtimer_test.c
+
+if [ `grep 'CFG_HI_KERNEL_VERSION=linux-4.9.329' -rl ${DIST_DIR}/configs/` ]; then
+    sed -i 's/CFG_HI_KERNEL_VERSION=linux-4\.9\.329/CFG_HI_KERNEL_VERSION=linux-4\.19\.322/g' `grep 'CFG_HI_KERNEL_VERSION=linux-4.9.329' -rl ${DIST_DIR}/configs/`
+fi
+
+if [ `grep 'CFG_LINUX-4.9.329=y' -rl ${DIST_DIR}/configs/` ]; then
+    sed -i 's/CFG_LINUX-4\.9\.329=y/CFG_LINUX-4\.19\.322=y/g' `grep 'CFG_LINUX-4.9.329=y' -rl ${DIST_DIR}/configs/`
+fi
 
 sed -i 's/linux-4\.9\.329/linux-4\.19\.322/g' ${DIST_DIR}/source/msp/drv/gpu/utgard/kbuild_flags
 sed -i 's/linux-4\.9\.329/linux-4\.19\.322/g' ${DIST_DIR}/source/msp/drv/hdmi/Makefile
@@ -85,7 +105,6 @@ if [ `grep -c "\+= hieth\/" ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/
     sed -i '1i\obj-$(CONFIG_HIETH_SWITCH_FABRIC) \+= hieth\/\n' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/ethernet/Makefile
 fi
 
-
 cp -Rf ${SOURCE_DIR}/source/kernel/${OLD_KERNEL}/drivers/net/phy/hisilicon.c ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/phy/
 if [ `grep -c "config HISILICON_PHY" ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/phy/Kconfig` -eq '0' ]; then
     sed -i '/endif # PHYLIB/i\config HISILICON_PHY\n	tristate "Drivers for HiSilicon PHYs"\n	---help---\n	  Supports the Festa series PHYs.\n' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/drivers/net/phy/Kconfig
@@ -107,3 +126,4 @@ cp -Rf ${SOURCE_DIR}/source/kernel/${OLD_KERNEL}/include/linux/hikapi.h ${DIST_D
 sed -i 's/-Werror=date-time/-Wno-error=date-time/g' ${DIST_DIR}/source/kernel/${NEW_KERNEL}/Makefile
 
 cp ${DIST_DIR}/configs/hi3798mv100/hi3798mdmo1g_hi3798mv100_cfg.mak ${DIST_DIR}/cfg.mak
+cp ${DIST_DIR}/source/kernel/Makefile ${DIST_DIR}/source/kernel/Makefile

@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # SDK version: KERNELVERSION
-# Sun Oct 27 14:03:41 2024
+# Sat Nov  9 12:53:52 2024
 #
 
 #
@@ -215,8 +215,8 @@ CFG_HI_BUILD_WITH_KEYLED=y
 # Kernel
 #
 # CFG_LINUX-3.18.y is not set
-CFG_LINUX-4.9.329=y
-CFG_HI_KERNEL_VERSION=linux-4.9.329
+CFG_LINUX-4.19.322=y
+CFG_HI_KERNEL_VERSION=linux-4.19.322
 CFG_HI_KERNEL_CFG=hi3798mv100_defconfig
 # CFG_HI_FS_BUILDIN is not set
 # CFG_HI_MSP_BUILDIN is not set

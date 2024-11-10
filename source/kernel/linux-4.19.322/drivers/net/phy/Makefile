@@ -1,3 +1,5 @@
+obj-$(CONFIG_HISILICON_PHY)	+= hisilicon.o
+
 # SPDX-License-Identifier: GPL-2.0
 # Makefile for Linux PHY drivers and MDIO bus drivers
 

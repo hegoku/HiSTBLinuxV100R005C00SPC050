@@ -471,4 +471,12 @@ config USB_DUMMY_HCD
 # NOTE:  Please keep dummy_hcd LAST so that "real hardware" appears
 # first and will be selected by default.
 
+config USB_HISI_UDC
+	tristate "Hisilicon USB2.0 Device Controller"
+	depends on HAS_DMA
+	help
+	  Hisilicon Socs include a high speed
+	  USB2.0 Device controller, which can be configured as high speed or
+	  full speed USB peripheral.
+
 endmenu

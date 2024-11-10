@@ -1,19 +1,19 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 choice
     prompt "Kernel Version"
-    default LINUX-4.9.329
+    default LINUX-4.19.322
 
 config  LINUX-3.18.y
     bool "linux-3.18.y"
 
-config  LINUX-4.9.329
-    bool "linux-4.9.329"
+config  LINUX-4.19.322
+    bool "linux-4.19.322"
 endchoice
 
 config  HI_KERNEL_VERSION
     string
     default linux-3.18.y if LINUX-3.18.y
-    default linux-4.9.329 if LINUX-4.9.329
+    default linux-4.19.322 if LINUX-4.19.322
 
 config  HI_KERNEL_CFG
     prompt "Kernel Config File"
