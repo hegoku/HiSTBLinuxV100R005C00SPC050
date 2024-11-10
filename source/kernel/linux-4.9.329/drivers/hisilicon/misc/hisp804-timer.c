@@ -321,7 +321,7 @@ static void __init hisp804_timer_init(struct device_node *node)
 
 	hisp804_clocksource_init(base, rate);
 
-	ret = cpuhp_setup_state(CPUHP_AP_ACTIVE, "hisp804timer:online",
+	ret = cpuhp_setup_state(CPUHP_AP_ARM_ARCH_TIMER_STARTING, "hisp804timer:online",
 				hisp804_cpu_online, hisp804_cpu_down);
 	if (ret)
 		goto out_notifier;
