@@ -16,7 +16,6 @@
 #include "mdio.h"
 #include "hieth_dbg.h"
 
-
 /*----------------------------Global variable-------------------------------*/
 struct hieth_phy_param_s hieth_phy_param[HIETH_MAX_PORT];
 
@@ -31,6 +30,11 @@ static int hieth_real_port_cnt;
 static bool hieth_disable;
 /* autoeee, enabled by dts */
 static bool hieth_enable_autoeee;
+
+static inline struct net_device *get_netdev_by_priv(const struct hieth_netdev_priv *priv)
+{
+	return (struct net_device *)(priv->dev->driver_data);
+}
 
 static int __init hieth_noeth(char *str)
 {
@@ -524,8 +528,9 @@ static irqreturn_t hieth_net_isr(int irq, void *dev_id)
 static void hieth_monitor_func(struct timer_list *t)
 {
 	struct hieth_netdev_priv *priv = from_timer(priv, t, monitor);
+	struct net_device *netdev = get_netdev_by_priv(priv);
 
-	if (!priv || !netif_running(priv->netdev)) {
+	if (!priv || !netif_running(netdev)) {
 		pr_debug("network driver is stopped.\n");
 		return;
 	}
@@ -1052,7 +1057,6 @@ static int hieth_platdev_probe_port(struct platform_device *pdev,
 	priv = netdev_priv(netdev);
 	memset(priv, 0, sizeof(*priv));
 	memcpy(priv, com_priv, sizeof(*priv));
-	priv->netdev = netdev;
 
 	local_lock_init(priv);
 

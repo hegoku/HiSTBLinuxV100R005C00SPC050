@@ -241,7 +241,6 @@ struct hieth_netdev_priv {
 
 	struct device *dev;
 	struct net_device_stats stats;
-	struct net_device *netdev;
 	struct phy_device *phy;
 	struct device_node *phy_node;
 	phy_interface_t	phy_mode;
